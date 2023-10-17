@@ -14,7 +14,7 @@ El siguiente trabajo estará basado en la base de datos [CT KIDNEY DATASET: Norm
 
 ### Data Pipeline
 
-![data_pipeline](https://github.com/milalangone/pib_ct_kidney_segmentation/assets/89553721/96ac3887-fcd5-4921-ac8e-a1368f6b0c8f)
+![data_pipeline](https://github.com/milalangone/pib_ct_kidney_segmentation/assets/89553721/e3d089dd-d754-4463-bfd4-3e2bba704402)
 
 ## Bibliografía
 
