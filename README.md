@@ -1,7 +1,9 @@
 # Clasificación de quistes, tumores, y cálculos renales a partir de imágenes de tomografía computarizada
 ----------
-16.16 - Procesamiento de Imágenes Biomédicas
-ALumnas:
+**16.16 - Procesamiento de Imágenes Biomédicas**
+
+Alumnas:
+
 - Mila Langone (61273)
 - Francesca Rondinella (61031)
 - Lucía Simoncelli (61429)
