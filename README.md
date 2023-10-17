@@ -14,7 +14,7 @@ El siguiente trabajo estará basado en la base de datos [CT KIDNEY DATASET: Norm
 
 ## Drive
 
-https://drive.google.com/drive/folders/1WzF3_uMtMcyLssO3RGUwCQIadztsjEks?usp=drive_link
+[Drive: Data set Normal-Cyst-Tumor and Stone](https://drive.google.com/drive/folders/1WzF3_uMtMcyLssO3RGUwCQIadztsjEks?usp=drive_link)
 
 ### Data Pipeline
 
