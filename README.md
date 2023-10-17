@@ -16,6 +16,14 @@ El siguiente trabajo estará basado en la base de datos [CT KIDNEY DATASET: Norm
 
 ![data_pipeline](https://github.com/milalangone/pib_ct_kidney_segmentation/assets/89553721/e3d089dd-d754-4463-bfd4-3e2bba704402)
 
+### Estructura de los datos
+
+Además de contar con las imágenes per se, también se cuenta con un .csv que contiene los siguientes campos:
+
+| image_id | path | diag | target | class |
+| --- | --- | --- | --- | --- |
+
+
 ## Bibliografía
 
 - Islam MN, Hasan M, Hossain M, Alam M, Rabiul G, Uddin MZ, Soylu A. Vision transformer and explainable transfer learning models for auto detection of kidney cyst, stone and tumor from CT-radiography. Scientific Reports. 2022 Jul 6;12(1):1-4.
