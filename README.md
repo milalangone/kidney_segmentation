@@ -32,7 +32,7 @@ Además de contar con las imágenes per se, también se cuenta con un .csv que c
 
 Cuando se carga una imagen a la GUI, el proceso por el que pasa es el siguiente:
 
-![mermaid-diagram-2023-11-14-175101](https://github.com/milalangone/pib_ct_kidney_segmentation/assets/89553721/4d21df44-ff9b-4e58-bffa-bd13b00c48a6)
+![pako_eNqFkF1LwzAUhv9KCAgVVoZe9kJw_Vr9AHF6Y9KLQ3vaFZukpCk6tv1302YdKoK5Sd5znve8Sfa0UCXSgFat-ii2oA15eOaS2HXLlpmAGpc58f0bsmLpa5a71mqqHB5BDtASzmWPLRamUfJAQo_dN6XEHbnKL__HozN-PeLOEI58zNiTRr_TqsC-b2Sdn9KjaVzsRDyJhLEN1gKlg](https://github.com/milalangone/pib_ct_kidney_segmentation/assets/89553721/7d2329cd-8b4c-4f6c-9816-db9039bd4c38)
 
 
 ## Bibliografía
