@@ -27,6 +27,13 @@ Además de contar con las imágenes per se, también se cuenta con un .csv que c
 | image_id | path | diag | target | class |
 | --- | --- | --- | --- | --- |
 
+## GUI
+### Procesamiento de las imágenes
+
+Cuando se carga una imagen a la GUI, el proceso por el que pasa es el siguiente:
+
+![mermaid-diagram-2023-11-14-175101](https://github.com/milalangone/pib_ct_kidney_segmentation/assets/89553721/4d21df44-ff9b-4e58-bffa-bd13b00c48a6)
+
 
 ## Bibliografía
 
