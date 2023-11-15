@@ -7,7 +7,6 @@ from scipy.stats import skew, kurtosis
 from skimage.measure import shannon_entropy
 from skimage.feature import greycomatrix, greycoprops
 from skimage.measure import regionprops
-from skimage import img_as_ubyte
 from skimage.transform import integral_image
 from skimage.feature import local_binary_pattern
 from scipy.stats import itemfreq
@@ -44,12 +43,12 @@ def extract_features(image):
     
     return features
     
-def create_dataframe(path, labels):
+def create_dataframe(path, label):
     
     data = []
     img_files = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.png')]
     
-    for img, label in zip(img_files, labels):
+    for img in img_files:
         img = cv2.imread(img, cv2.IMREAD_GRAYSCALE)
     
         features = extract_features(img)
@@ -60,4 +59,3 @@ def create_dataframe(path, labels):
     df = pd.DataFrame(data)
     
     return df
-
