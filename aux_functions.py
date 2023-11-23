@@ -9,6 +9,11 @@ from skimage.feature import graycomatrix, graycoprops
 from skimage.measure import regionprops
 from skimage.transform import integral_image
 from skimage.feature import local_binary_pattern
+from sklearn.metrics import classification_report, multilabel_confusion_matrix, ConfusionMatrixDisplay
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
 
 def extract_intensity_features(image):
     intensity_features = {}
@@ -107,3 +112,28 @@ def clicker_seg(img_r1, img_r2, select):
   img_gray1 = bin2gray(img_r1)
   img_gray2 = bin2gray(img_r2)
   return img_gray1, img_gray2
+
+def new_data_point(img):
+
+  data = []
+
+  # Segment image
+  img_seg_kmeans = segmentar(img, 1)
+  seg_gray = bin2gray(img_seg_kmeans, img)
+
+  # Extract image features
+  features = extract_features(img)
+  data.append(features)
+
+  # Create dataframe
+  x_new = pd.DataFrame(data)
+
+  return x_new
+
+def predict_probabilities(img, trained_model, classes):
+
+  x = new_data_point(img)
+  test_label_probabilities = trained_model.predict_proba(x)
+
+  return test_label_probabilities
+    
