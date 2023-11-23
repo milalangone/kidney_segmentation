@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsRectItem, QM
 from PyQt5.QtCore import QByteArray, QEvent, QRect, Qt, QRectF
 import numpy as np
 import cv2
+import aux_functions
 
 
 class KidneyClassifierApp(QSplitter):
@@ -33,9 +34,14 @@ class KidneyClassifierApp(QSplitter):
         self.rect2_label = QLabel(right_widget)
         buttons_layout.addWidget(self.rect1_label)
         buttons_layout.addWidget(self.rect2_label)
+        
+        segment_layout = QHBoxLayout()
+        
 
-        self.process_button = QPushButton("Process", right_widget)
-        buttons_layout.addWidget(self.process_button)
+        self.segment1_button = QPushButton("Segment Otsu", right_widget)
+        self.segment2_button = QPushButton("Segment K-means", right_widget)
+        segment_layout.addWidget(self.segment1_button)
+        segment_layout.addWidget(self.segment2_button)
 
         # Create a horizontal layout for classify buttons
         classify_layout = QHBoxLayout()
@@ -47,6 +53,7 @@ class KidneyClassifierApp(QSplitter):
 
         # Add the classify buttons to the vertical layout
         buttons_layout.addLayout(classify_layout)
+        buttons_layout.addLayout(segment_layout)
 
         # Add the vertical layout to the right layout
         right_layout.addLayout(buttons_layout)
@@ -55,7 +62,8 @@ class KidneyClassifierApp(QSplitter):
         font = self.upload_button.font()
         font.setPointSize(12)  # Adjust the font size as needed
         self.upload_button.setFont(font)
-        self.process_button.setFont(font)
+        self.segment1_button.setFont(font)
+        self.segment2_button.setFont(font)
         self.classify_button1.setFont(font)
         self.classify_button2.setFont(font)
 
@@ -66,7 +74,8 @@ class KidneyClassifierApp(QSplitter):
 
         # Connect button signals to functions
         self.upload_button.clicked.connect(self.upload_image)
-        self.process_button.clicked.connect(self.process_image)
+        self.segment1_button.clicked.connect(self.process_image)
+        self.segment2_button.clicked.connect(self.process_image)
         self.classify_button1.clicked.connect(self.classify_image)
         self.classify_button2.clicked.connect(self.classify_image)
     
