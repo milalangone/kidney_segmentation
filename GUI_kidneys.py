@@ -1,5 +1,5 @@
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QRubberBand, QSizePolicy, QSpacerItem, QSplitter, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QApplication, QComboBox, QHBoxLayout, QRubberBand, QSizePolicy, QSpacerItem, QSplitter, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog
 from PyQt5.QtGui import QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsRectItem, QMainWindow
 from PyQt5.QtCore import QByteArray, QEvent, QRect, Qt, QRectF
@@ -34,14 +34,9 @@ class KidneyClassifierApp(QSplitter):
         self.rect2_label = QLabel(right_widget)
         buttons_layout.addWidget(self.rect1_label)
         buttons_layout.addWidget(self.rect2_label)
-        
-        segment_layout = QHBoxLayout()
-        
 
-        self.segment1_button = QPushButton("Segment Otsu", right_widget)
-        self.segment2_button = QPushButton("Segment K-means", right_widget)
-        segment_layout.addWidget(self.segment1_button)
-        segment_layout.addWidget(self.segment2_button)
+        self.process_button = QPushButton("Process", right_widget)
+        buttons_layout.addWidget(self.process_button)
 
         # Create a horizontal layout for classify buttons
         classify_layout = QHBoxLayout()
@@ -62,8 +57,7 @@ class KidneyClassifierApp(QSplitter):
         font = self.upload_button.font()
         font.setPointSize(12)  # Adjust the font size as needed
         self.upload_button.setFont(font)
-        self.segment1_button.setFont(font)
-        self.segment2_button.setFont(font)
+        self.process_button.setFont(font)
         self.classify_button1.setFont(font)
         self.classify_button2.setFont(font)
 
@@ -179,7 +173,12 @@ class KidneyClassifierApp(QSplitter):
 
         
     def process_image(self):
-        # Implement image processing logic here
+        if self.segmentation_combobox == "Otsu":
+            print("Otsu") ##cambiar
+        elif self.segmentation_combobox == "K-Means":
+            print("K-means") ##cambiar
+        elif self.segmentation_combobox == "Watershed":
+            print("Watershed") ##cambiar
         pass
 
     def classify_image(self):
