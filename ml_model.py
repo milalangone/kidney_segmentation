@@ -31,7 +31,7 @@ for path in paths:
     filtered = aux_functions.gaussian(path,5,1)
     segmented_imgs = []
     for img in filtered:
-        img_seg_kmeans = aux_functions.segmentar(img, 1)
+        img_seg_kmeans = aux_functions.segmentar(img, 0)
         seg_gray = aux_functions.bin2gray(img_seg_kmeans, img)
         segmented_imgs.append(seg_gray)
     segmented_paths.append(segmented_imgs)
