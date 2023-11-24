@@ -84,7 +84,6 @@ def segmentar(img, select):
       _, img_otsu = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
       return img_otsu
   elif select == 1:
-      # Convert image to float32 and flatten
       z = img.astype(np.float32).reshape((-1, 1))
 
       criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
@@ -94,15 +93,15 @@ def segmentar(img, select):
       center = np.uint8(centers)
       img_kmeans = center[labels.flatten()]
       img_kmeans = img_kmeans.reshape((img.shape))
-      return img_kmeans
+      return img_kmeans.astype(np.uint8)
 
 
 def bin2gray(img_seg, img_og):
 
-  img_new = np.zeros((len(img_seg), len(img_seg[0])))
+  img_new = np.zeros_like(img_seg, dtype=np.uint8)
   for i in range(len(img_seg)):
     for j in range(len(img_seg[0])):
-      if img_seg[i][j] != 0:
+      if img_seg[i][j] != np.min(img_seg):
         img_new[i][j] = img_og[i][j]
   return img_new.astype(np.uint8)
 

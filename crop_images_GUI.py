@@ -113,16 +113,16 @@ if __name__ == "__main__":
     img_counter = 0
 
     # dir stuff
-    labels_dir_path = "C:\\Users\\milal\\Downloads\\pib_recortado"  # where to store label txt files
-    imgs_dir_path = "C:\\Users\\milal\\Downloads\\pib\\Cyst filtrado"  # where to grab images from
-    rois_dir_path = "C:\\Users\\milal\\Downloads\\pib_recortado"  # where to store roi
+    labels_dir_path = "C:/Users/lusim/Downloads/cut imgs" # where to store label txt files
+    imgs_dir_path = "C:/Users/lusim/Downloads/sample imgs"  # where to grab images from
+    rois_dir_path = "C:/Users/lusim/Downloads/cut imgs"  # where to store roi
     
     file_names_with_ext = get_file_names_from_dir(imgs_dir_path)
     file_names = [x.split(".")[0] for x in file_names_with_ext] # gets name only - discards extension
     number_of_imgs = len(file_names)
 
     # image stuff
-    img = cv2.imread( imgs_dir_path + "\\" + file_names[img_counter] + ".jpg" )
+    img = cv2.imread( imgs_dir_path + "/" + file_names[img_counter] + ".jpg" )
     img_l, img_w, ch = img.shape
     tmp_img = img.copy()
 
@@ -203,7 +203,7 @@ if __name__ == "__main__":
                 
             elif(k == ord("s") ): # save roi after viewing it
                 local_roi_counter += 1
-                path = rois_dir_path + file_names[img_counter] + "_" + str(local_roi_counter) + ".jpg"
+                path = rois_dir_path +'/' +file_names[img_counter] + "_" + str(local_roi_counter) + ".jpg"
                 print("\n* Saved ROI #" + str(local_roi_counter) + " " + str(roi) + " to: " + path)
                 cv2.imwrite(path, img_roi)
                 
@@ -211,7 +211,7 @@ if __name__ == "__main__":
                 txt_file = create_txt_file(txt_file_path)
                 print(str(LABEL), x, y, w, h, file=txt_file)
                 
-                cv2.destroyWindow("roi")
+                # cv2.destroyWindow("roi")
                 roi = (0, 0, 0, 0)
                 tmp_img = img.copy()
                 cv2.imshow("image", tmp_img)
