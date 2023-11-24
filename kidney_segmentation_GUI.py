@@ -156,7 +156,9 @@ class CTScanApp(QMainWindow):
                     local_roi_counter += 1
                     path = rois_dir_path +'/' +file_names[img_counter] + "_" + str(local_roi_counter) + ".jpg"
                     print("\n* Saved ROI #" + str(local_roi_counter) + " " + str(self.roi) + " to: " + path)
-                    cv2.imwrite(path, img_roi)
+                    
+                    img_roi_resized = cv2.resize(img_roi, (img_roi.shape[1]*2, img_roi.shape[0]*2))
+                    cv2.imwrite(path, img_roi_resized)
                     
                     txt_file_path = labels_dir_path + file_names[img_counter] + ".txt"
                     txt_file = self.create_txt_file(txt_file_path)
@@ -169,12 +171,14 @@ class CTScanApp(QMainWindow):
                     # cv2.imshow("image", tmp_img)
                     
                     pixmap = QPixmap(path)
-                    current_roi = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+                    
                     
                     if image_number == 1:
+                        current_roi = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
                         self.image1 = current_roi
                         self.scene1.addPixmap(pixmap)
                     else:
+                        current_roi = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
                         self.image2 = current_roi
                         self.scene2.addPixmap(pixmap)
                     
@@ -194,6 +198,9 @@ class CTScanApp(QMainWindow):
         
         img_otsu2 = aux_functions.segmentar(img2, 0)
         self.img_segm2 = aux_functions.bin2gray(img_otsu2, img2)
+        
+        self.scene1.clear()
+        self.scene2.clear()
 
         # Convert the segmented NumPy array to QPixmap and display it
         segmented_pixmap = self.ndarray_to_pixmap(self.img_segm1)
@@ -205,6 +212,9 @@ class CTScanApp(QMainWindow):
         segmented_item = QGraphicsPixmapItem(segmented_pixmap)
         segmented_item.setPos(0, 0)
         self.scene2.addItem(segmented_item)
+        
+        self.view1.update()
+        self.view2.update()
 
         return self.img_segm1, self.img_segm2
 
@@ -214,6 +224,9 @@ class CTScanApp(QMainWindow):
         
         img_kmeans2 = aux_functions.segmentar(img2,1)
         self.img_segm2 = aux_functions.bin2gray(img_kmeans2, img2)
+        
+        self.scene1.clear()
+        self.scene2.clear()
 
         # Convert the segmented NumPy array to QPixmap and display it
         segmented_pixmap = self.ndarray_to_pixmap(self.img_segm1)
@@ -225,6 +238,9 @@ class CTScanApp(QMainWindow):
         segmented_item = QGraphicsPixmapItem(segmented_pixmap)
         segmented_item.setPos(0, 0)
         self.scene2.addItem(segmented_item)
+        
+        self.view1.update()
+        self.view2.update()
 
         return self.img_segm1, self.img_segm2
 
@@ -239,14 +255,13 @@ class CTScanApp(QMainWindow):
         classif_labels = ['Cyst', 'Normal', 'Stones', 'Tumor']
         
         aux_functions.new_data_point(img1)
-        classification1 = aux_functions.predict_probabilities(img1, self.dt, classif_labels)
+        classification1 = aux_functions.predict_probabilities(img1, self.dt)
         
-        aux_functions.new_data_point(img2)
-        classification2 = aux_functions.predict_probabilities(img2, self.dt, classif_labels)
-
         result_text = f', '.join([f'{classif}: {round(classification1[0][i]*100,2)}%' for i, classif in enumerate(classif_labels)])
         self.result_label1.setText(f'Left Kidney Results: {result_text}')
         
+        aux_functions.new_data_point(img2)
+        classification2 = aux_functions.predict_probabilities(img2, self.dt)
         result_text2 = f', '.join([f'{classif}: {round(classification2[0][i]*100,2)}%' for i, classif in enumerate(classif_labels)])
         self.result_label2.setText(f'Right Kidney Results: {result_text2}')
     

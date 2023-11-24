@@ -116,10 +116,6 @@ def new_data_point(img):
 
   data = []
 
-  # Segment image
-  img_seg_kmeans = segmentar(img, 1)
-  seg_gray = bin2gray(img_seg_kmeans, img)
-
   # Extract image features
   features = extract_features(img)
   data.append(features)
@@ -129,7 +125,7 @@ def new_data_point(img):
 
   return x_new
 
-def predict_probabilities(img, trained_model, classes):
+def predict_probabilities(img, trained_model):
 
   x = new_data_point(img)
   test_label_probabilities = trained_model.predict_proba(x)
