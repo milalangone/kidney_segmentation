@@ -4,6 +4,7 @@ import os
 from sklearn.tree import DecisionTreeClassifier
 import aux_functions
 from skimage import feature
+import joblib
 import pandas as pd
 from scipy.stats import skew, kurtosis
 from skimage.measure import shannon_entropy
@@ -57,7 +58,6 @@ random_state = 13 # para asegurar reproducibilidad de los resultados
 ts = 0.3 # test size, el estandar es 30% de la base de datos
 
 xtrain, xtest, ytrain, ytest = train_test_split(X, y_encoded, random_state=random_state, test_size=ts)
-print(f'Training on {ytrain.size} examples')
 
 ######## TRAINED MODEL
 dt = DecisionTreeClassifier(max_depth = 3)
@@ -68,3 +68,7 @@ y_prob_test = dt.predict_proba(xtest)
 
 # Convert probabilities to predicted labels
 y_pred_test = dt.predict(xtest)
+
+
+path_dt = "C:/Users/lusim/OneDrive/Documents/projects/pib_ct_kidney_segmentation"
+joblib.dump(dt, f'{path_dt}/pretrained_decision_tree_model.joblib')
