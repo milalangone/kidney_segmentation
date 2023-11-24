@@ -1,4 +1,5 @@
 import cv2
+import joblib
 import numpy as np
 import os
 from skimage import feature
@@ -108,27 +109,34 @@ def bin2gray(img_seg, img_og):
 def clicker_seg(img_r1, img_r2, select):
   img_seg1 = segmentar(img_r1, select)
   img_seg2 = segmentar(img_r2, select)
-  img_gray1 = bin2gray(img_r1)
-  img_gray2 = bin2gray(img_r2)
+  img_gray1 = bin2gray(img_seg1)
+  img_gray2 = bin2gray(img_seg2)
   return img_gray1, img_gray2
 
-def new_data_point(img):
+def new_data_point(imagen):
 
   data = []
+  
+  #Segment
+  img_seg_kmeans = segmentar(imagen, 1)
+  seg_gray = bin2gray(img_seg_kmeans, imagen)
 
   # Extract image features
-  features = extract_features(img)
+  features = extract_features(imagen)
   data.append(features)
+  
+  print("Debug: Segmented Image Shape -", seg_gray.shape)
+  print("Debug: Extracted Features -", features)
 
   # Create dataframe
   x_new = pd.DataFrame(data)
+  print(x_new)
 
   return x_new
 
-def predict_probabilities(img, trained_model):
+def predict_probabilities(imagen, trained_model):
 
-  x = new_data_point(img)
+  x = new_data_point(imagen)
   test_label_probabilities = trained_model.predict_proba(x)
 
   return test_label_probabilities
-    

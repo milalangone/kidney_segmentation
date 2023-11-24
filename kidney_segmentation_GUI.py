@@ -18,6 +18,8 @@ class CTScanApp(QMainWindow):
         self.ix, self.iy = -1, -1
         self.roi = (0, 0, 0, 0)
         self.img = None
+        self.image1 = None
+        self.image2 = None
 
     def initUI(self):
         
@@ -31,11 +33,11 @@ class CTScanApp(QMainWindow):
         self.button_layout = QHBoxLayout()
 
         self.upload_button1 = QPushButton('Upload Kidney 1', self)
-        self.upload_button1.clicked.connect(lambda: self.upload_scan(1))
+        self.upload_button1.clicked.connect(self.upload_scan1)
         self.button_layout.addWidget(self.upload_button1)
 
         self.upload_button2 = QPushButton('Upload Kidney 2', self)
-        self.upload_button2.clicked.connect(lambda: self.upload_scan(2))
+        self.upload_button2.clicked.connect(self.upload_scan2)
         self.button_layout.addWidget(self.upload_button2)
 
         self.otsu_button = QPushButton('Segment (Otsu)', self)
@@ -47,7 +49,7 @@ class CTScanApp(QMainWindow):
         self.button_layout.addWidget(self.kmeans_button)
 
         self.classify_button = QPushButton('Classify', self)
-        self.classify_button.clicked.connect(lambda: self.classify(self.img_segm1, self.img_segm2))
+        self.classify_button.clicked.connect(self.classify)
         self.button_layout.addWidget(self.classify_button)
 
         
@@ -77,7 +79,7 @@ class CTScanApp(QMainWindow):
         self.setWindowTitle('CT Scan Analysis')
         self.show()
 
-    def upload_scan(self, image_number):
+    def upload_scan1(self):
         
         ''' CONSTANTS '''
         LABEL = 11 # 1 - 9 reserved for DICE, 10 is old orange gate, 11 is new black and red
@@ -146,19 +148,14 @@ class CTScanApp(QMainWindow):
                     tmp_img = self.img.copy()
                     cv2.imshow("image", tmp_img)
                     
-                elif(k == ord("v") ): # view roi
-                    print("\n\tViewing ROI "  + str(self.roi) )
-                    print("\t\tShape", img_roi.shape)
-                    cv2.imshow("roi", img_roi)
-                    cv2.moveWindow("roi", img_w, 87)
                     
                 elif(k == ord("s") ): # save roi after viewing it
                     local_roi_counter += 1
-                    path = rois_dir_path +'/' +file_names[img_counter] + "_" + str(local_roi_counter) + ".jpg"
-                    print("\n* Saved ROI #" + str(local_roi_counter) + " " + str(self.roi) + " to: " + path)
+                    path_1 = rois_dir_path +'/' +file_names[img_counter] + "_" + str(1) + ".jpg"
+                    print("\n* Saved ROI #" + str(local_roi_counter) + " " + str(self.roi) + " to: " + path_1)
                     
                     img_roi_resized = cv2.resize(img_roi, (img_roi.shape[1]*2, img_roi.shape[0]*2))
-                    cv2.imwrite(path, img_roi_resized)
+                    cv2.imwrite(path_1, img_roi_resized)
                     
                     txt_file_path = labels_dir_path + file_names[img_counter] + ".txt"
                     txt_file = self.create_txt_file(txt_file_path)
@@ -170,17 +167,10 @@ class CTScanApp(QMainWindow):
                     # tmp_img = self.img.copy()
                     # cv2.imshow("image", tmp_img)
                     
-                    pixmap = QPixmap(path)
-                    
-                    
-                    if image_number == 1:
-                        current_roi = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-                        self.image1 = current_roi
-                        self.scene1.addPixmap(pixmap)
-                    else:
-                        current_roi = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-                        self.image2 = current_roi
-                        self.scene2.addPixmap(pixmap)
+                    pixmap = QPixmap(path_1)
+                    current_roi = cv2.imread(path_1, cv2.IMREAD_GRAYSCALE)
+                    self.image1 = current_roi
+                    self.scene1.addPixmap(pixmap)
                     
                 elif(k == ord("c") ): # clear roi
                     print("\n\tCleared ROI " + str(self.roi) )
@@ -189,7 +179,105 @@ class CTScanApp(QMainWindow):
                     tmp_img = self.img.copy()
                     cv2.imshow("image", tmp_img)
 
-   
+    def upload_scan2(self):
+            
+            ''' CONSTANTS '''
+            LABEL = 11 # 1 - 9 reserved for DICE, 10 is old orange gate, 11 is new black and red
+            SQUARE = False
+
+            ''' GLOBAL VARIABLES ''' 
+            drawing = False # true if mouse is pressed
+
+            
+            clear_screen_cmd = os.system('cls' if os.name == 'nt' else 'clear')
+            print(clear_screen_cmd) # clears terminal (ctrl + l)
+
+            # counters
+            global_roi_counter = 0
+            local_roi_counter = 0
+            img_counter = 0
+
+            # dir stuff
+            labels_dir_path = "C:/Users/lusim/Downloads/cut imgs" # where to store label txt files
+            imgs_dir_path = "C:/Users/lusim/Downloads/sample imgs"  # where to grab images from
+            rois_dir_path = "C:/Users/lusim/Downloads/cut imgs"  # where to store roi
+            
+            file_names_with_ext = self.get_file_names_from_dir(imgs_dir_path)
+            file_names = [x.split(".")[0] for x in file_names_with_ext] # gets name only - discards extension
+            number_of_imgs = len(file_names)
+
+            # image stuff
+            self.img = cv2.imread( imgs_dir_path + "/" + file_names[img_counter] + ".jpg" )
+            img_l, img_w, ch = self.img.shape
+            tmp_img = self.img.copy()
+
+            # window/screen stuff
+            cv2.namedWindow("image")
+            cv2.setMouseCallback("image", self.draw_rectangle)
+            cv2.imshow("image", self.img)
+
+            while True:
+                k = cv2.waitKey(1) & 0xFF
+                if k == 27 or k == ord("q"): # exit
+                    print("\n\tQ was pressed - Quitting\n")
+                    global_roi_counter += local_roi_counter
+                    print(str(global_roi_counter) + " ROI(s) were stored!\n")
+                    break
+                
+                    
+                elif(k == ord("t") ): # toggle square resize
+                    SQUARE = not SQUARE
+                    print("\n\tSquare toggled:", SQUARE)
+                
+                if (self.roi != (0, 0, 0, 0) ): # if ROI has been created
+                    roi_x, roi_y, roi_w, roi_h = self.roi
+                    x, y, w, h = self.get_roi(roi_x, roi_y, roi_w, roi_h) # returns the ROI from original image
+                    
+                    if (SQUARE):
+                        x, y, w, h = self.roi_to_square(self.img, x, y, w, h) # squares the bounding box
+
+                    if ( (x, y, w, h) == (0, 0, 0, 0) ): # checks for bug when mouse is clicked but no box is created
+                        img_roi = None
+                    else:
+                        img_roi = self.img[y:h, x:w, :]
+
+                    if (img_roi is None): # bug check - need to identify small boxes
+                        print("\nERROR:\tROI " + str(roi) + " is Out-of-Bounds OR not large enough")
+                        # cv2.destroyWindow("roi")
+                        self.roi = (0, 0, 0, 0) # might already be set
+                        tmp_img = self.img.copy()
+                        cv2.imshow("image", tmp_img)
+                        
+                        
+                    elif(k == ord("s") ): # save roi after viewing it
+                        local_roi_counter += 1
+                        path_2 = rois_dir_path +'/' +file_names[img_counter] + "_" + str(2) + ".jpg"
+                        print("\n* Saved ROI #" + str(local_roi_counter) + " " + str(self.roi) + " to: " + path_2)
+                        
+                        img_roi_resized = cv2.resize(img_roi, (img_roi.shape[1]*2, img_roi.shape[0]*2))
+                        cv2.imwrite(path_2, img_roi_resized)
+                        
+                        txt_file_path = labels_dir_path + file_names[img_counter] + ".txt"
+                        txt_file = self.create_txt_file(txt_file_path)
+                        print(str(LABEL), x, y, w, h, file=txt_file)
+
+                        
+                        # cv2.destroyWindow("self.roi")
+                        self.roi = (0, 0, 0, 0)
+                        # tmp_img = self.img.copy()
+                        # cv2.imshow("image", tmp_img)
+                        
+                        pixmap = QPixmap(path_2)
+                        current_roi = cv2.imread(path_2, cv2.IMREAD_GRAYSCALE)
+                        self.image2 = current_roi
+                        self.scene2.addPixmap(pixmap)
+                        
+                    elif(k == ord("c") ): # clear roi
+                        print("\n\tCleared ROI " + str(self.roi) )
+                        roi = (0, 0, 0, 0)
+                        cv2.destroyWindow("self.roi")
+                        tmp_img = self.img.copy()
+                        cv2.imshow("image", tmp_img)
             
         
     def segment_otsu(self, img1, img2):
@@ -251,18 +339,25 @@ class CTScanApp(QMainWindow):
         pixmap = QPixmap.fromImage(qimage)
         return pixmap
 
-    def classify(self, img1, img2):
+    def classify(self):
         classif_labels = ['Cyst', 'Normal', 'Stones', 'Tumor']
-        
-        aux_functions.new_data_point(img1)
-        classification1 = aux_functions.predict_probabilities(img1, self.dt)
-        
-        result_text = f', '.join([f'{classif}: {round(classification1[0][i]*100,2)}%' for i, classif in enumerate(classif_labels)])
+
+        print("Debug: img1 shape:", self.image1.shape)  # Add this line for debugging
+        aux_functions.new_data_point(self.image1)
+        print("Debug: Data point for img1 created")  # Add this line for debugging
+        classification1 = aux_functions.predict_probabilities(self.image1, self.dt)
+        print("Debug: Classification 1:", classification1)  # Add this line for debugging
+
+        result_text = ', '.join([f'{classif}: {round(classification1[0][i] * 100, 2)}%' for i, classif in enumerate(classif_labels)])
         self.result_label1.setText(f'Left Kidney Results: {result_text}')
-        
-        aux_functions.new_data_point(img2)
-        classification2 = aux_functions.predict_probabilities(img2, self.dt)
-        result_text2 = f', '.join([f'{classif}: {round(classification2[0][i]*100,2)}%' for i, classif in enumerate(classif_labels)])
+
+        print("Debug: img2 shape:", self.image2.shape)  # Add this line for debugging
+        aux_functions.new_data_point(self.image2)
+        print("Debug: Data point for img2 created")  # Add this line for debugging
+        classification2 = aux_functions.predict_probabilities(self.image2, self.dt)
+        print("Debug: Classification 2:", classification2)  # Add this line for debugging
+
+        result_text2 = ', '.join([f'{classif}: {round(classification2[0][i] * 100, 2)}%' for i, classif in enumerate(classif_labels)])
         self.result_label2.setText(f'Right Kidney Results: {result_text2}')
     
 
