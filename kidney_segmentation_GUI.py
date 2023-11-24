@@ -63,10 +63,10 @@ class CTScanApp(QMainWindow):
 
         self.layout.addLayout(self.horizontal_layout)
         
-        self.result_label1 = QLabel('Results image 1:', self)
+        self.result_label1 = QLabel('Left Kidney Results:', self)
         self.layout.addWidget(self.result_label1)
 
-        self.result_label2 = QLabel('Results image 2:', self)
+        self.result_label2 = QLabel('Right Kidney Results: ', self)
         self.layout.addWidget(self.result_label2)
 
         self.setGeometry(100, 100, 800, 600)
@@ -144,10 +144,10 @@ class CTScanApp(QMainWindow):
         classification2 = aux_functions.predict_probabilities(img2, self.dt, classif_labels)
 
         result_text = f', '.join([f'{classif}: {round(classification1[0][i]*100,2)}%' for i, classif in enumerate(classif_labels)])
-        self.result_label1.setText(f'Classifier Results: {result_text}')
+        self.result_label1.setText(f'Left Kidney Results: {result_text}')
         
         result_text2 = f', '.join([f'{classif}: {round(classification2[0][i]*100,2)}%' for i, classif in enumerate(classif_labels)])
-        self.result_label2.setText(f'Classifier Results: {result_text2}')
+        self.result_label2.setText(f'Right Kidney Results: {result_text2}')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
